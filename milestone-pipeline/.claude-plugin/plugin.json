@@ -1,6 +1,6 @@
 {
   "name": "milestone-pipeline",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Rigorous milestone delivery pipeline for Claude Code: plan -> acceptance criteria -> implement -> independent review -> fix -> hands-on QA -> codify QA scenarios as tests, with human gates and loop caps. One /milestone skill plus six role subagents and a deterministic test gate.",
   "author": { "name": "Tal Niv" },
   "keywords": ["workflow", "pipeline", "tdd", "code-review", "qa", "subagents"]
