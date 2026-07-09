@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# JetBrains IDEs
+.idea/
+
+# VS Code
+.vscode/
+
+# Node (if any tooling is added later)
+node_modules/

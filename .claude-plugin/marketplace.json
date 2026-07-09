@@ -1,0 +1,11 @@
+{
+  "name": "milestone-pipeline-marketplace",
+  "owner": { "name": "Tal Niv" },
+  "plugins": [
+    {
+      "name": "milestone-pipeline",
+      "source": "./milestone-pipeline",
+      "description": "Milestone delivery pipeline: /milestone skill + 6 role subagents + deterministic test gate."
+    }
+  ]
+}
