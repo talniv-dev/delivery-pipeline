@@ -24,15 +24,22 @@ valuable scenario QA exercised should be re-runnable by CI forever.
 2. Only scenarios with **no covering test** get new tests. Borderline cases
    (partially covered) get the missing assertion added to the existing test
    rather than a near-duplicate new one.
-3. Match repo conventions exactly. Integration-style QA scenarios that are
-   impractical as automated tests get recorded as such — do not force flaky
-   tests into the suite.
-4. You may not change production code. If a scenario is untestable without a
+3. **"No *unit* framework" ≠ "no framework."** Before concluding a UI/frontend
+   (or any) scenario is not automatable, check for **e2e** frameworks too, not
+   just unit runners: inspect `package.json` `scripts` **and** `devDependencies`
+   (for `playwright`/`cypress`, `test:e2e`, etc.) **and** `glob` for `e2e/`,
+   `*.spec.*`, `*.e2e.*`, `playwright.config*`, `cypress.config*`. Only conclude
+   "no framework exists" after all of those come back empty — and cite what you
+   checked.
+4. Match repo conventions exactly. Integration-style QA scenarios that are
+   genuinely impractical as automated tests get recorded as such — do not force
+   flaky tests into the suite.
+5. You may not change production code. If a scenario is untestable without a
    production change, record it; don't hack around it.
-5. Run the bundled gate before finishing:
+6. Run the bundled gate before finishing:
    `bash "${CLAUDE_PLUGIN_ROOT}/scripts/test-gate.sh" <slug>` (fall back to
    `~/.claude/scripts/test-gate.sh` if `${CLAUDE_PLUGIN_ROOT}` is unset).
-6. Do not touch `status.json`.
+7. Do not touch `status.json`.
 
 ## Artifact
 Write `milestones/<slug>/test-coverage-notes.md`:

@@ -45,6 +45,13 @@ the environment remains an optional override for edge cases.)
   actually forked from.
 - Test gates are the script above — branch on its exit code. A subagent's claim
   of green is never a substitute.
+- Verify prose, not just green. The gate proves code-**green**, never prose-**true**:
+  a suite can pass while a subagent's factual claim about the repo is false. Before
+  any repo-state fact a subagent reported becomes **load-bearing** — an acceptance
+  criterion, a gate/scope/config decision, an assertion you make to the human at a
+  gate, or a line in SUMMARY — run the one cheap command (grep/ls/glob/read) that
+  confirms it yourself. Claims that never become load-bearing need no check (this
+  keeps delegation lean).
 - At human gates (🧑) STOP and wait for explicit approval. Never proceed on
   silence; never answer a gate question on the human's behalf.
 - Respect loop caps. On a cap or any unresolvable state: set `BLOCKED`,
@@ -79,8 +86,9 @@ the environment remains an optional override for edge cases.)
 5. 🧑 **GATE 1:** Present the planner's summary, its open questions with
    recommended defaults, the **detected test command** (for confirmation — the
    human may correct it, and you rewrite `test-cmd` accordingly), and the path to
-   `acceptance-criteria.md`. Ask the human to answer the open questions and
-   approve. Record their answers into `acceptance-criteria.md` (recording human
+   `acceptance-criteria.md`. Before presenting, spot-check any repo-state fact
+   from the planner that an AC now rests on (one cheap command). Ask the human to
+   answer the open questions and approve. Record their answers into `acceptance-criteria.md` (recording human
    decisions is allowed). → `APPROVED`.
 
 ## Phase A — Coding
@@ -90,7 +98,8 @@ the environment remains an optional override for edge cases.)
    last-test-output.log") and repeat. GREEN → `IMPLEMENTED`, reset counter.
 8. Delegate to **code-reviewer**. → `REVIEWED`.
 9. 🧑 **GATE 2:** Present the verdict + finding counts and the path to
-   `review-findings.md`. Human approves, or edits findings (record edits,
+   `review-findings.md`. Spot-check any repo-state fact from the reviewer that you
+   are about to repeat to the human (one cheap command). Human approves, or edits findings (record edits,
    attributed to the human). → `REVIEW_APPROVED`. If verdict was `APPROVE` with
    zero blocker/major findings, the human may say "skip fix round" → go to 12.
 10. Delegate to **fixer** (findings file = `review-findings.md`).
@@ -107,7 +116,8 @@ the environment remains an optional override for edge cases.)
 14. Delegate to **test-writer**. → `TESTS_ADDED`.
 15. Final test gate. RED → one fixer round then re-gate; still RED → `BLOCKED`.
     GREEN → continue.
-16. Write `milestones/$ARGUMENTS/SUMMARY.md` (ACs delivered, findings
+16. Write `milestones/$ARGUMENTS/SUMMARY.md` — spot-check any subagent repo-state
+    fact before it becomes a permanent line here (ACs delivered, findings
     fixed/disputed, QA iterations, new tests, out-of-scope discoveries, anything
     flagged, and the **commit list** `git log <base_branch>..HEAD --oneline` so
     every commit is attributed to a phase). → `DONE`. Present the summary;
