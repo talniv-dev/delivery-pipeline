@@ -1,11 +1,11 @@
 {
-  "name": "milestone-pipeline-marketplace",
+  "name": "delivery-pipeline-marketplace",
   "owner": { "name": "Tal Niv" },
   "plugins": [
     {
-      "name": "milestone-pipeline",
-      "source": "./milestone-pipeline",
-      "description": "Milestone delivery pipeline: /milestone skill + 6 role subagents + deterministic test gate."
+      "name": "delivery-pipeline",
+      "source": "./delivery-pipeline",
+      "description": "Gated delivery pipeline for any coding task: /pipeline skill + 6 role subagents + deterministic test gate."
     }
   ]
 }
