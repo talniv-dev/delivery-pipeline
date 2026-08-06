@@ -1,6 +1,6 @@
 {
   "name": "delivery-pipeline",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Rigorous delivery pipeline for any coding task in Claude Code: context -> acceptance criteria -> implement -> independent review -> fix -> hands-on QA -> codify QA scenarios as tests, with human gates and loop caps. One /pipeline skill plus six role subagents and a deterministic test gate. Takes context in any shape; enforces only the workflow.",
   "author": { "name": "Tal Niv" },
   "keywords": ["workflow", "pipeline", "tdd", "code-review", "qa", "subagents"]

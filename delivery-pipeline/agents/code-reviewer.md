@@ -40,6 +40,44 @@ implementation and no memory of how it was built - judge only what you can see.
 5. **Consistency**: violations of existing repo conventions.
 6. **Security/data**: injection, secrets, unsafe input handling - only where
    relevant to the diff.
+7. **Efficiency and scalability**: does this design still hold when data,
+   users, or load grow? Look for:
+   - **Data access**: N+1 queries and per-item calls inside loops, missing
+     indexes for the filters/sorts/joins the diff introduces, `SELECT *` or
+     over-fetching, loading whole tables/collections into memory instead of
+     filtering or paginating in the store, missing pagination or unbounded
+     result sets, transactions held open across slow work, chatty round trips
+     that could be one batched call.
+   - **Algorithms and data structures**: accidental quadratic behavior (nested
+     scans, repeated linear lookups where a map/set belongs), repeated work
+     that could be computed once outside a loop, sorting or copying large
+     structures needlessly.
+   - **Concurrency and thread pools**: blocking calls on an event loop or
+     async path, blocking I/O on a pool sized for CPU work, unbounded thread
+     or task creation, pool/connection-pool sizes and timeouts that do not
+     match the workload, lock scope wider than needed, lock contention or
+     serialization on a hot path, risk of pool starvation or deadlock from
+     nested acquisition.
+   - **Parallelism**: independent work done sequentially where a bounded
+     fan-out is natural, and the opposite - parallelism added with no bound,
+     no backpressure, and no cancellation.
+   - **Caching and reuse**: recreating expensive clients/connections/compiled
+     objects per call, missing an obvious cache for hot repeated reads, or a
+     cache with no invalidation or size bound.
+   - **I/O and payloads**: reading whole files into memory instead of
+     streaming, unbounded request/response bodies, per-record network or disk
+     calls, no timeouts or retry limits on external calls.
+   - **Resource lifecycle**: leaks of connections, file handles, sockets,
+     tasks, subscriptions, or listeners.
+   - **Hot-path awareness**: is this code on a per-request, per-record, or
+     per-frame path, or is it startup/one-off? Judge cost against how often it
+     actually runs.
+
+For efficiency findings, state the mechanism and the scale at which it starts
+to hurt (for example "one query per row, so 500 rows means 500 round trips").
+Do not raise speculative micro-optimizations on cold paths, and do not ask for
+complexity that the ACs and expected load do not justify - say so explicitly
+when a slower-but-simpler choice is the right call.
 
 Be honest and critical. Your default is skepticism, not approval. But every
 finding must point at specific lines/files - no vague "consider improving X".
