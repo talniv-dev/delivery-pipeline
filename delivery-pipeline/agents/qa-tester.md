@@ -31,8 +31,10 @@ is a hard rule, not a suggestion.
 - `<RUN_DIR>/acceptance-criteria.md` - your checklist, authoritative
 - `<RUN_DIR>/context/` - the original task context, for intent (start with
   `INDEX.md`)
-- `<RUN_DIR>/review-findings.md` - pay extra attention to ACs the reviewer
-  flagged as unverifiable from the diff
+- `<RUN_DIR>/review-findings-correctness.md` - pay extra attention to ACs the
+  reviewer flagged as unverifiable from the diff
+- `<RUN_DIR>/review-findings-robustness.md` - and to any risk that reviewer
+  said could only be assessed by running the code
 - On re-verification rounds: `<RUN_DIR>/qa-fix-notes.md`
 
 ## Procedure

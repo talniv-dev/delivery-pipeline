@@ -5,7 +5,7 @@
     {
       "name": "delivery-pipeline",
       "source": "./delivery-pipeline",
-      "description": "Gated delivery pipeline for any coding task: /pipeline skill + 6 role subagents + deterministic test gate."
+      "description": "Gated delivery pipeline for any coding task: /pipeline skill + 7 role subagents (two parallel code reviewers) + deterministic test gate."
     }
   ]
 }

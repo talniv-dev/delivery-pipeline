@@ -9,7 +9,7 @@ your context -> acceptance criteria -> implement -> independent review -> fix
              -> hands-on QA -> codify QA scenarios as tests
 ```
 
-One orchestrator skill (`/pipeline`) drives six single-purpose subagents, a
+One orchestrator skill (`/pipeline`) drives seven single-purpose subagents, a
 deterministic test gate, two human approval gates, and loop caps, with all run
 state tracked on disk so an interrupted run can resume.
 
@@ -33,10 +33,17 @@ loop caps, and an audit trail.
 
 ## Why it's built this way
 
-- **Fresh-context subagents.** The reviewer has no memory of how the code was
-  built and defaults to skepticism; the fixer "defends the codebase, not the
+- **Fresh-context subagents.** The reviewers have no memory of how the code
+  was built and default to skepticism; the fixer "defends the codebase, not the
   implementation's ego." Each role starts cold so it can't rationalize the
   previous role's mistakes.
+- **Review is split in two and runs in parallel.** One reviewer judges contract
+  fidelity, correctness, test quality, scope and conventions; the other judges
+  security and efficiency/scalability. Each gets a full context window for a
+  narrow question, so a long performance checklist can't crowd out "does this
+  actually satisfy the criteria". They never see each other's findings, and
+  their finding ids are namespaced (`C-n`, `R-n`) so the fixer works one
+  combined list.
 - **A deterministic gate is the source of truth.** Pass/fail is the exit code
   of a bundled script, never a subagent's *claim* that tests are green.
 - **QA runs the software, then that work becomes permanent.** The QA role
@@ -81,7 +88,7 @@ command is enough.
 | Phase | Steps |
 |-------|-------|
 | **0 - Setup & planning** | Collect your context in whatever form it came; normalize it into the run directory; create the run branch off the branch you're on; auto-detect the test command; derive testable acceptance criteria. **Gate 1:** approve criteria, answer open questions, confirm the detected test command. |
-| **A - Coding** | Implement against the criteria (tests written alongside) -> test gate -> independent code review. **Gate 2:** approve/edit review findings -> fix round -> test gate. |
+| **A - Coding** | Implement against the criteria (tests written alongside) -> test gate -> two independent code reviews in parallel (correctness, robustness). **Gate 2:** approve/edit review findings -> fix round -> test gate. |
 | **B - QA** | Hands-on QA of every criterion -> fix loop on failures -> codify exercised scenarios as automated tests -> final gate -> `SUMMARY.md`. |
 
 Two human gates block the pipeline until you explicitly approve. Fix and QA
@@ -101,7 +108,8 @@ delivers, and the branch is `pipeline/<run-id>`. Inside:
 ├── test-cmd               # the detected + confirmed test command
 ├── acceptance-criteria.md # the contract
 ├── implementation-notes.md
-├── review-findings.md
+├── review-findings-correctness.md
+├── review-findings-robustness.md
 ├── qa-report.md
 ├── test-coverage-notes.md
 └── SUMMARY.md
@@ -141,10 +149,11 @@ subagent's notes, in `status.json` history, and in the per-phase commit list in
 delivery-pipeline/
 ├── .claude-plugin/plugin.json
 ├── skills/pipeline/SKILL.md        # the /pipeline orchestrator
-├── agents/                         # six role subagents
+├── agents/                         # seven role subagents
 │   ├── planner.md                  # any context -> testable acceptance criteria
 │   ├── implementer.md              # builds to the criteria, tests alongside
-│   ├── code-reviewer.md            # independent, read-only diff review
+│   ├── code-reviewer-correctness.md # read-only review: contract, bugs, tests, scope
+│   ├── code-reviewer-robustness.md  # read-only review: security, efficiency, scale
 │   ├── fixer.md                    # applies review/QA findings, minimal diffs
 │   ├── qa-tester.md                # runs the software, verifies each criterion
 │   └── test-writer.md              # codifies QA scenarios as automated tests

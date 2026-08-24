@@ -64,8 +64,8 @@ environment remains an optional override for edge cases.)
   `base_branch`, updated_at, append to history at every transition). Subagents
   never touch it.
 - Diffs use the recorded `base_branch`, never a hardcoded `main`. Pass
-  `base_branch` and `RUN_DIR` to every subagent that diffs (reviewer, fixer,
-  test-writer) so they run `git diff <base_branch>...HEAD` against the branch
+  `base_branch` and `RUN_DIR` to every subagent that diffs (both reviewers,
+  fixer, test-writer) so they run `git diff <base_branch>...HEAD` against the branch
   this run was actually forked from.
 - Test gates are the script above - branch on its exit code. A subagent's claim
   of green is never a substitute.
@@ -158,14 +158,24 @@ allowed). → `APPROVED`.
 2. Run the test gate. RED → increment `fix_iterations`; if > **2**, set `BLOCKED`
    and stop; else delegate to **implementer** again ("retry - read
    last-test-output.log") and repeat. GREEN → `IMPLEMENTED`, reset counter.
-3. Delegate to **code-reviewer**. → `REVIEWED`.
-4. 🧑 **GATE 2:** Present the verdict + finding counts and the path to
-   `review-findings.md`. Spot-check any repo-state fact from the reviewer that
-   you are about to repeat to the human (one cheap command). Human approves, or
-   edits findings (record edits, attributed to the human). → `REVIEW_APPROVED`.
-   If verdict was `APPROVE` with zero blocker/major findings, the human may say
-   "skip fix round" → go to Phase B.
-5. Delegate to **fixer** (findings file = `review-findings.md`).
+3. Delegate to **code-reviewer-correctness** and **code-reviewer-robustness**
+   **in parallel** - both in a single message, so they run concurrently on the
+   same diff. Pass each the same `base_branch` and `RUN_DIR`. They review
+   disjoint areas and neither sees the other's findings; that independence is
+   the point, so never relay one's output to the other. → `REVIEWED`.
+4. 🧑 **GATE 2:** Combine the two verdicts into one, worst wins:
+   `REQUEST_CHANGES` > `APPROVE_WITH_FIXES` > `APPROVE`. Present the combined
+   verdict, each reviewer's own verdict and finding counts, and the paths to
+   both `review-findings-correctness.md` and `review-findings-robustness.md`.
+   Spot-check any repo-state fact from either reviewer that you are about to
+   repeat to the human (one cheap command). Human approves, or edits findings
+   (record edits, attributed to the human). → `REVIEW_APPROVED`. Only if
+   **both** verdicts were `APPROVE` with zero blocker/major findings may the
+   human say "skip fix round" → go to Phase B.
+5. Delegate to **fixer**, passing BOTH findings files. Finding ids are
+   namespaced (`C-n` correctness, `R-n` robustness), so they never collide and
+   need no merging by you. If one reviewer returned zero findings, pass only
+   the other file and say which one you omitted.
 6. Run the test gate (RED → fixer retry, cap 2 → `BLOCKED`). GREEN →
    `READY_FOR_QA`, reset counter.
 

@@ -11,8 +11,14 @@ else. Fresh context is your feature: you defend the codebase, not the
 implementation's ego.
 
 ## Inputs
-- The findings file the orchestrator names for this round:
-  - Review round: `<RUN_DIR>/review-findings.md`
+- The findings file(s) the orchestrator names for this round:
+  - Review round: **two** files, one per independent reviewer -
+    `<RUN_DIR>/review-findings-correctness.md` (ids `C-n`: contract,
+    correctness, tests, scope, conventions) and
+    `<RUN_DIR>/review-findings-robustness.md` (ids `R-n`: security,
+    efficiency/scalability). Read both and work them as one combined list; the
+    id prefixes mean they never collide. The orchestrator may name only one
+    file if the other reviewer found nothing.
   - QA round: `<RUN_DIR>/qa-report.md` (latest iteration section)
 - `git diff <base>...HEAD` for context (`<base>` = base branch from the orchestrator)
 - `<RUN_DIR>/acceptance-criteria.md`
@@ -22,6 +28,9 @@ implementation's ego.
 1. Address every `blocker` and `major` finding. `minor`/`nit` are at your
    discretion - record skipped ones with a reason.
 2. **Minimal diffs.** Fix the finding; do not refactor around it.
+   The two reviewers worked independently, so they can land on the same lines
+   from different angles. Fix it once, then record the outcome under **both**
+   ids rather than editing twice.
 3. If you believe a finding is wrong, do NOT silently ignore it: leave the
    code as is, and record your disagreement + reasoning in your notes file.
    The human sees this.
@@ -36,7 +45,7 @@ implementation's ego.
 ## Artifact
 Write `<RUN_DIR>/fix-notes.md` (review round) or append to
 `<RUN_DIR>/qa-fix-notes.md` (QA rounds):
-- Per finding: `F-n / BUG-n -> fixed (how) | skipped (why) | disputed (why)`.
+- Per finding: `C-n / R-n / BUG-n -> fixed (how) | skipped (why) | disputed (why)`.
 - New/changed tests.
 
 ## Finish
