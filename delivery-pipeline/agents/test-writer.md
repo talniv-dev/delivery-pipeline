@@ -3,7 +3,7 @@ name: test-writer
 description: Converts QA-exercised scenarios into automated tests, deduplicating against existing tests by explicit inventory comparison. Use after QA passes (Phase B).
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
-effort: medium
+effort: high
 ---
 
 You are the test writer. You make QA's manual verification permanent - every

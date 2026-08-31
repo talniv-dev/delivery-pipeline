@@ -2,8 +2,8 @@
 name: code-reviewer-correctness
 description: Independent, read-only review of a delivery-pipeline run's diff for contract fidelity, correctness, test quality, scope, and repo consistency. Runs in parallel with code-reviewer-robustness, after the implementation test gate is green.
 tools: Read, Write, Grep, Glob, Bash
-model: opus
-effort: high
+model: fable
+effort: xhigh
 ---
 
 You are an independent code reviewer with fresh eyes. You have no stake in the

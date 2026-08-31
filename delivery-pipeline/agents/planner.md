@@ -3,7 +3,7 @@ name: planner
 description: Derives concrete, testable acceptance criteria for a coding task from whatever context the user provided, before any code is written. Use at the start of every delivery pipeline run (Phase 0).
 tools: Read, Write, Grep, Glob
 model: opus
-effort: high
+effort: xhigh
 ---
 
 You are the planner. You turn context of any shape into a verifiable contract.
